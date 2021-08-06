@@ -3,9 +3,55 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shoppingmall.mappers.adminMapper">
+
 	<!-- 카테고리 호출 -->
 	<select id="category" resultType="com.shoppingmall.domain.CategoryVO">
 		SELECT level, cateName, cateCode, cateCodeRef
 		FROM goods_category
 	</select>
+
+	<!-- 상품 등록 -->
+	<insert id="register">
+		INSERT INTO mall_goods (gdsName, cateCode, gdsPrice, gdsStock, gdsDes)
+		VALUES (#{gdsName}, #{cateCode}, #{gdsPrice}, #{gdsStock}, #{gdsDes})
+	</insert>
+
+	<!-- 상품 목록 -->
+	<select id="goodsList" resultType="com.shoppingmall.domain.GoodsVO">
+		SELECT gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDes, gdsImg, gdsDate
+		FROM mall_goods
+		ORDER BY gdsNum DESC
+	</select>
+
+	<!-- 상품 조회 -->
+	<!-- <select id="goodsView" resultType="com.shoppingmall.domain.GoodsVO"> SELECT gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDes, gdsImg, gdsDate FROM mall_goods WHERE gdsNum = #{gdsNum} </select> -->
+
+	<!-- 상품 조회 + 카테고리 조인 -->
+	<select id="goodsView" resultType="com.shoppingmall.domain.GoodsViewVO">
+		SELECT g.gdsNum, g.gdsName, g.cateCode, c.cateCodeRef, c.cateName, gdsPrice, gdsStock, gdsDes, gdsImg, gdsDate
+		FROM mall_goods g
+		INNER JOIN goods_category c
+		ON
+		g.cateCode = c.cateCode
+		WHERE g.gdsNum = #{gdsNum}
+	</select>
+
+	<!-- 상품 수정 -->
+	<update id="goodsModify">
+		UPDATE mall_goods
+		SET
+		gdsName = #{gdsName},
+		cateCode = #{cateCode},
+		gdsPrice = #{gdsPrice},
+		gdsStock = #{gdsStock},
+		gdsDes = #{gdsDes}
+		WHERE gdsNum = #{gdsNum}
+	</update>
+
+	<!-- 상품 삭제 -->
+	<delete id="goodsDelete">
+		DELETE FROM mall_goods
+		WHERE gdsNum = #{gdsNum}
+	</delete>
+
 </mapper>

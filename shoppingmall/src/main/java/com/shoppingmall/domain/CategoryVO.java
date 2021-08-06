@@ -35,6 +35,4 @@ public class CategoryVO {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	
-	
 }
